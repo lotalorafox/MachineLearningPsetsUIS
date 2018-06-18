@@ -2,13 +2,13 @@ import numpy as np
 from skimage import io
 import matplotlib.pyplot as plt
 def convolution(A, f):
-    cols = A.shape[0]-f.shape[0]+1
-    rows = A.shape[1]-f.shape[1]+1
-    r = np.ones((cols,rows))
-    if cols<=0 or rows<=0:
+    rows = A.shape[0]-f.shape[0]+1
+    cols = A.shape[1]-f.shape[1]+1
+    r = np.ones((rows,cols))
+    if rows<=0 or cols<=0:
         raise ValueError("filter must be smaller than matrix")
-    for i in range(cols):
-        for j in range(rows):
+    for i in range(rows):
+        for j in range(cols):
             sub = A[i:i+f.shape[0],j:j+f.shape[1]]
             v = sub*f
             r[i,j]=r[i,j]*np.sum(v)
@@ -17,13 +17,13 @@ def convolution(A, f):
 
 
 def convolution_sad(A, f):
-    cols = A.shape[0]-f.shape[0]+1
-    rows = A.shape[1]-f.shape[1]+1
-    r = np.ones((cols, rows))
-    if cols <= 0 or rows <= 0:
+    rows = A.shape[0]-f.shape[0]+1
+    cols = A.shape[1]-f.shape[1]+1
+    r = np.ones((rows, cols))
+    if rows <= 0 or cols <= 0:
         raise ValueError("filter must be smaller than matrix")
-    for i in range(cols):
-        for j in range(rows):
+    for i in range(rows):
+        for j in range(cols):
             sub = A[i:i+f.shape[0], j:j+f.shape[1]]
             v = abs(sub-f)
             r[i, j] = r[i, j]*abs(np.sum(v))
