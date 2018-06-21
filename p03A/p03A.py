@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import warnings
-from filer.py import *
+from filter2 import *
 
 class ConstantAccelerationRobot(object):
     def __init__ (self, init_pos=0., init_vel=0., accel=0., mnoise=0.1):
@@ -38,8 +38,34 @@ def pos_vel_1D_tracking_example(robot_pos, robot_vel, robot_accel,
 
     # -----------------
     # TU CODIGO AQUI
-    F =  np.array([[1,1,1],[0,1,1],[0,0,1]])
-    H =  np.array([[1,0,0],[0,1,0],[0,0,1]])   # Measurement function
+    F = np.array([[1, 1, 1], [0, 1, 1],[0, 0, 1]])  # state transition matrix
+    H = np.array([[1, 0, 0]])     # Measurement function
+    # -----------------
+     
+    k = KalmanFilter(dim_x=3, dim_z=1, P=P, R=R, Q=Q, F=F, H=H, init_x=init_x)
+    xhist, Phist = k.filter_data(mhist)
+
+    xhist = [[i[0][0], i[1][0]] for i in xhist]
+    plot_kalman_position_velocity(phist, mhist, xhist, Phist, o.vel_history )
+
+def pos_vel_1D_tracking_example2(robot_pos, robot_vel, robot_accel,
+                                estimated_init_pos, estimated_init_vel,estimated_init_accel,
+                                P,Q,R):
+    
+    init_x = [np.array([estimated_init_pos]), np.array([estimated_init_vel]), np.array([estimated_init_accel])]
+
+    o = ConstantAccelerationRobot(init_pos=robot_pos, init_vel=robot_vel, accel=robot_accel, mnoise=R)
+    o.move_n_time_steps(n=200)
+    phist, mhist = o.pos_history, np.array(o.m_history)
+
+    # -----------------
+    # TU CODIGO AQUI
+    # modifica la señal en mhist entre las posiciones 70 y 110      
+    mhist[70:110] = mhist[70]
+
+    # usa las mismas matrices del ejercicio anterior
+    F = np.array([[1, 1, 1], [0, 1, 1],[0, 0, 1]])  # state transition matrix
+    H = np.array([[1, 0, 0]])     # Measurement function
     # -----------------
      
     k = KalmanFilter(dim_x=3, dim_z=1, P=P, R=R, Q=Q, F=F, H=H, init_x=init_x)
@@ -53,5 +79,6 @@ def main():
 	o.move_n_time_steps(n=30)
 	real, measured = o.pos_history, o.m_history
 	plot_moves (real, measured)
+
 if __name__ == '__main__':
 	main()

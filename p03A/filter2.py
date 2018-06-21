@@ -50,6 +50,7 @@ def plot_moves(real_x, measured_x=None, filter_x=None, g=None, h=None, ylim=None
     plt.legend(loc='lower right') #, bbox_to_anchor=(1, 0.5))
     if ylim is not None:
         plt.ylim(ylim[0], ylim[1])
+    plt.show()
 
 def plot_moves_variance(real, measures, xhist, Phist, ylim=None):
     x = np.array(xhist)
